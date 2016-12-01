@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+input = File.read("input")
+moves = input.split(",").map(&:strip)
+
+x = 0
+y = 0
+facing = [0, 1, 0, -1]
+intersections = [[0,0]]
+
+class Array
+  def rotate_left
+    self.push(self.shift)
+  end
+  def rotate_right
+    self.unshift(self.pop)
+  end
+end
+
+moves.each do |move|
+  turn = move[0]
+  dist = move[1..-1].to_i
+  do_break = false
+
+  case turn
+  when "L"
+    facing.rotate_right
+  when "R"
+    facing.rotate_left
+  end
+
+  (facing[0].abs * dist).times do
+    x += facing[0] * 1
+    if intersections.include?([x, y]) then
+      do_break = true
+      break
+    else
+      intersections << [x,y]
+    end
+  end
+
+  (facing[1].abs * dist).times do
+    y += facing[1] * 1
+    if intersections.include?([x, y]) then
+      do_break = true
+      break
+    else
+      intersections << [x,y]
+    end
+  end
+
+  break if do_break
+end
+
+puts x.abs + y.abs
