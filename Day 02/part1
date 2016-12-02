@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+istrs = File.readlines("input")
+
+at = 4
+code = ""
+
+istrs.each do |istr|
+  moves = istr.chars
+  moves.each do |move|
+    case move
+    when "U"
+      at -= 3 unless at / 3 == 0
+    when "D"
+      at += 3 unless at / 3 == 2
+    when "L"
+      at -= 1 unless at % 3 == 0
+    when "R"
+      at += 1 unless at % 3 == 2
+    end
+  end
+
+  code << (at + 1).to_s
+end
+
+puts code
