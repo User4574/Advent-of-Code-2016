@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'scanf'
+
+def check(sides)
+  sides[0] + sides[1] > sides[2] &&
+  sides[1] + sides[2] > sides[0] &&
+  sides[2] + sides[0] > sides[1]
+end
+
+def mutate_input(triangles)
+  newtriangles = []
+  (0...triangles.count).step(3).each do |i|
+    newtriangles += [
+      [ triangles[i][0], triangles[i+1][0], triangles[i+2][0] ],
+      [ triangles[i][1], triangles[i+1][1], triangles[i+2][1] ],
+      [ triangles[i][2], triangles[i+1][2], triangles[i+2][2] ]
+    ]
+  end
+  newtriangles
+end
+
+triangles = File.readlines("input")
+triangles = triangles.map do |triangle|
+  triangle.scanf("%5d%5d%5d")
+end
+triangles = mutate_input triangles
+
+possibilities = triangles.map do |triangle|
+  check triangle
+end
+
+puts possibilities.count(true)

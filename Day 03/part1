@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+require 'scanf'
+
+def check(sides)
+  sides[0] + sides[1] > sides[2] &&
+  sides[1] + sides[2] > sides[0] &&
+  sides[2] + sides[0] > sides[1]
+end
+
+triangles = File.readlines("input")
+
+possibilities = triangles.map do |triangle|
+  sides = triangle.scanf("%5d%5d%5d")
+  check sides
+end
+
+puts possibilities.count(true)
