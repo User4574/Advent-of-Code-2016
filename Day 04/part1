@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+
+require 'scanf'
+
+def checksum(name)
+  chars = Hash.new(0)
+  name.chars.each do |c|
+    chars[c] += 1
+  end
+  chars["-"] = 0
+
+  chars = chars.to_a
+  schars = chars.sort do |a, b|
+    if a.last < b.last then
+      1
+    elsif a.last > b.last then
+      -1
+    else
+      if a.first < b.first then
+        -1
+      elsif a.first > b.first then
+        1
+      else
+        0
+      end
+    end
+  end
+  schars[0...5].map(&:first).join
+end
+
+rooms = File.readlines("input")
+sum = 0
+
+rooms.each do |room|
+  name, sid, cs = room.scanf("%[a-z\-]%d\[%[a-z]\]")
+  sum += sid if checksum(name) == cs
+end
+
+puts sum
