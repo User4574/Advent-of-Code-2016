@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require 'digest'
+
+def animation(password)
+  chars = ("0".."9").to_a + ("a".."f").to_a
+  password.map do |char|
+    if char == "_" then
+      chars.sample
+    else
+      char
+    end
+  end
+end
+
+doorid = File.read("input").chomp
+
+idx = 0
+password = ["_"] * 8
+
+print "#{animation(password).join} "
+
+while password.include?("_") do
+  dig = Digest::MD5.hexdigest("#{doorid}#{idx}")
+  if dig[0...5] == "00000" && \
+    dig[5].to_i(16) < 8 && \
+    password[dig[5].to_i] == "_" then
+      password[dig[5].to_i] = dig[6]
+  end
+  if idx % 10000 == 0 then
+      print "\r#{animation(password).join} "
+  end
+  idx += 1
+end
+
+puts "\r#{password.join}"
