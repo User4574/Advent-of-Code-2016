@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+message = File.readlines("input").map(&:chomp)
+
+chars = [
+  Hash.new(0), Hash.new(0),
+  Hash.new(0), Hash.new(0),
+  Hash.new(0), Hash.new(0),
+  Hash.new(0), Hash.new(0)
+]
+
+message.each do |rep|
+  rep.chars.each_with_index do |c, i|
+    chars[i][c] += 1
+  end
+end
+
+chars = chars.map do |c|
+  c.sort_by{|k, v| v}.first.first
+end
+
+puts chars.join
