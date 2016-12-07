@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+
+def invert(str)
+  return [str[1], str[0], str[1]].join
+end
+
+def reverse_matches(matches, inbracketmatches)
+  matches.each do |match|
+    return true if inbracketmatches.include?(invert(match))
+  end
+  return false
+end
+
+def supports_ssl(ip)
+  inbracket = false
+  inbracketmatches = []
+  matches = []
+
+  (0..(ip.length-3)).each do |i|
+    case ip[i]
+    when "]"
+      inbracket = false
+    when "["
+      inbracket = true
+    else
+      if ip[i] != ip[i+1] &&
+        ip[i] == ip[i+2] then
+        if inbracket then
+          inbracketmatches << ip[i..i+2]
+        else
+          matches << ip[i..i+2]
+        end
+      end
+    end
+  end
+
+  return reverse_matches(matches, inbracketmatches)
+end
+
+ips = File.readlines("input")
+
+sum = 0
+
+ips.each do |ip|
+  sum += 1 if supports_ssl(ip)
+end
+
+puts sum

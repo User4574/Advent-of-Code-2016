@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+def supports_tls(ip)
+  inbracket = false
+  inbracketmatch = false
+  match = false
+
+  (0..(ip.length-4)).each do |i|
+    case ip[i]
+    when "]"
+      inbracket = false
+    when "["
+      inbracket = true
+    else
+      if ip[i] != ip[i+1] &&
+        ip[i] == ip[i+3] &&
+        ip[i+1] == ip[i+2] then
+        if inbracket then
+          inbracketmatch = true
+        else
+          match = true
+        end
+      end
+    end
+  end
+
+  return match && !inbracketmatch
+end
+
+ips = File.readlines("input")
+
+sum = 0
+
+ips.each do |ip|
+  sum += 1 if supports_tls(ip)
+end
+
+puts sum
