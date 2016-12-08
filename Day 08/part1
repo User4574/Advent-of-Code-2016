@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+commands = File.readlines("input")
+
+screen = []
+
+6.times do
+  screen << ([false]*50)
+end
+
+commands.each do |command|
+  bits = command.split
+  if bits[0] == "rect" then
+    len, high = bits[1].split("x").map(&:to_i)
+    (0...high).each do |row|
+      (0...len).each do |col|
+        screen[row][col] = true
+      end
+    end
+  elsif bits[1] == "row" then
+    row = bits[2].split("=").last.to_i
+    times = bits[4].to_i
+    times.times do
+      screen[row].unshift(screen[row].pop)
+    end
+  else
+    col = bits[2].split("=").last.to_i
+    times = bits[4].to_i
+    times.times do
+      newcol = []
+      screen.each do |r|
+        newcol << r[col]
+      end
+      newcol.unshift(newcol.pop)
+      screen.each do |r|
+        r[col] = newcol.shift
+      end
+    end
+  end
+end
+
+puts screen.flatten.count(true)
