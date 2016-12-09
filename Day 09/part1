@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+def decompress(string)
+  out = ""
+
+  i = 0
+  while i < string.length do
+    if string[i] == "(" then
+      i += 1
+      j = i
+      while string[j] != "x" do
+        j += 1
+      end
+      len = string[i...j].to_i
+
+      j += 1
+      i = j
+      while string[j] != ")" do
+        j += 1
+      end
+      times = string[i...j].to_i
+
+      i = j+1
+      times.times do
+        out << string[i...i+len]
+      end
+
+      i += len
+    else
+      out << string[i]
+      i += 1
+    end
+  end
+
+  return out
+end
+
+input = File.read("input").chomp
+
+puts decompress(input).length
