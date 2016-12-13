@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+
+class Bot
+  attr_accessor :low, :high, :chips
+
+  def initialize(low, high, chips)
+    @low = low
+    @high = high
+    @chips = chips
+  end
+
+  def pass(newbots)
+    if @chips.length == 2 then
+      lowchip = @chips.min
+      highchip = @chips.max
+      @chips = []
+      newbots[@low].chips << lowchip if @low != -1
+      newbots[@high].chips << highchip if @high != -1
+      return true
+    end
+    return false
+  end
+
+  def is_comparing?(a, b)
+    return @chips.include?(a) && @chips.include?(b)
+  end
+end
+
+instructions = File.readlines("input").map(&:chomp)
+
+bots = []
+
+instructions.each do |istr|
+  bits = istr.split
+  case bits[0]
+  when "value"
+    botno = bits[5].to_i
+    chipval = bits[1].to_i
+    if bots[botno].nil? then
+      bots[botno] = Bot.new(0, 0, [chipval])
+    else
+      bots[botno].chips << chipval
+    end
+  when "bot"
+    botno = bits[1].to_i
+    lowno = bits[5] == "bot" ? bits[6].to_i : -1
+    highno = bits[10] == "bot" ? bits[11].to_i : -1
+    if bots[botno].nil? then
+      bots[botno] = Bot.new(lowno, highno, [])
+    else
+      bots[botno].low = lowno
+      bots[botno].high = highno
+    end
+  end
+end
+
+gotit = false
+
+until gotit do
+  bots.each_with_index do |bot, i|
+    if bot.is_comparing?(61, 17) then
+      gotit = true
+      puts i
+      break
+    end
+  end
+  break if gotit
+
+  newbots = []
+  bots.each_with_index do |bot, i|
+    newbots[i] = Bot.new(bot.low, bot.high, [])
+  end
+
+  bots.each_with_index do |bot, i|
+    passed = bot.pass(newbots)
+    unless passed then
+      newbots[i].chips += bot.chips
+    end
+  end
+
+  bots = newbots
+end
