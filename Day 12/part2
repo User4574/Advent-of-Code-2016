@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+class String
+  def is_int?
+    return !!(self =~ /^-?[0-9]+$/)
+  end
+end
+
+instructions = File.readlines("input").map(&:chomp)
+
+reg = {
+  "a" => 0,
+  "b" => 0,
+  "c" => 1,
+  "d" => 0
+}
+
+pc = 0
+
+while pc < instructions.length
+  bits = instructions[pc].split
+
+  case bits[0]
+  when "cpy"
+    val = bits[1].is_int? ? bits[1].to_i : reg[bits[1]]
+    reg[bits[2]] = val
+    pc += 1
+  when "inc"
+    reg[bits[1]] += 1
+    pc += 1
+  when "dec"
+    reg[bits[1]] -= 1
+    pc += 1
+  when "jnz"
+    jmp = bits[2].is_int? ? bits[2].to_i : reg[bits[2]]
+    tst = bits[1].is_int? ? bits[1].to_i : reg[bits[1]]
+    pc += tst.zero? ? 1 : jmp
+  end
+end
+
+puts reg["a"]
