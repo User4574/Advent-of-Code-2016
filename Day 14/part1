@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require 'digest'
+
+salt = File.read("input").chomp
+
+validhashes = []
+hashesunderconsideration = []
+
+idx = 0
+while validhashes.length < 64 do
+  oldhashes = hashesunderconsideration.select do |hash|
+    hash[0] < idx - 1000
+  end
+  hashesunderconsideration -= oldhashes
+
+  ch = Digest::MD5.hexdigest("#{salt}#{idx}")
+
+  (0..(32-5)).each do |i|
+    if ch[i] == ch[i+1] && ch[i] == ch[i+2] &&
+      ch[i] == ch[i+3] && ch[i] == ch[i+4] then
+        newhashes = hashesunderconsideration.select do |hash|
+          hash[1] == ch[i]
+        end
+        hashesunderconsideration -= newhashes
+        validhashes += newhashes
+    end
+  end
+
+  (0..(32-3)).each do |i|
+    if ch[i] == ch[i+1] && ch[i] == ch[i+2] then
+      hashesunderconsideration << [idx, ch[i]]
+      break
+    end
+  end
+
+  idx += 1
+end
+
+puts validhashes.map(&:first).sort[63]
