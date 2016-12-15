@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+class Disk
+  def initialize(positions, start)
+    @positions = positions
+    @current = start
+  end
+
+  def clicks_away(i)
+    (@current + i) % @positions == 0
+  end
+
+  def click
+    @current = (@current + 1) % @positions
+  end
+end
+
+input = File.readlines("input").map(&:chomp)
+
+disks = []
+input.each do |line|
+  line =~ /^Disc #(\d) has (\d+) positions; at time=0, it is at position (\d+)\.$/
+  disks[$1.to_i] = Disk.new($2.to_i, $3.to_i)
+end
+
+time = 0
+
+loop do
+  goodtime = true
+
+  (1...disks.length).each do |i|
+    unless disks[i].clicks_away(i) then
+      goodtime = false
+      break
+    end
+  end
+
+  break if goodtime
+
+  disks.compact.each(&:click)
+  time += 1
+end
+
+puts time
