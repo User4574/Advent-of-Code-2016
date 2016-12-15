@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+
+number = File.read("input").to_i
+
+size = 52
+
+grid = Array.new(size) {Array.new}
+
+size.times do |y|
+  size.times do |x|
+    e = x*x + 3*x + 2*x*y + y + y*y
+    e += number
+    grid[y][x] = e.to_s(2).count("1") % 2 == 1
+  end
+end
+
+slen = Math.log(size, 10).ceil
+print " " * (slen + 1)
+(size/10).times { print "0123456789" }
+print "0123456789"[0...(size % 10)]
+puts
+
+size.times do |y|
+  print "#{y.to_s.rjust(slen, "0")} "
+  size.times do |x|
+    if x == 31 && y == 39 then
+      print "E"
+    elsif x == 1 && y == 1 then
+      print "S"
+    else
+      print grid[y][x] ? "█" : " "
+    end
+  end
+  puts
+end
