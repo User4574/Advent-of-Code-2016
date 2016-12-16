@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+def invert(string)
+  new = ""
+  string.chars.each do |ch|
+    new << (ch == "1" ? "0" : "1")
+  end
+  new
+end
+
+len = 35651584
+
+state = File.read("input").chomp
+while state.length < len do
+  newstate = state + "0" + invert(state.reverse)
+  state = newstate
+end
+
+state = state[0...len]
+chksm = state
+while chksm.length.even? do
+  new = ""
+  (0...chksm.length).step(2).each do |i|
+    new << (chksm[i] == chksm[i+1] ? "1" : "0")
+  end
+  chksm = new
+end
+
+puts chksm
