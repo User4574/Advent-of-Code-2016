@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+def next_row(row)
+  new = ""
+  row = ".#{row}."
+
+  (1..row.length-2).each do |i|
+    test = row[i-1..i+1]
+    if test == "^^." || test == ".^^" ||
+      test == "^.." || test == "..^" then
+      new << "^"
+    else
+      new << "."
+    end
+  end
+
+  new
+end
+
+rows = []
+
+rows[0] = File.read("input").chomp
+
+399999.times do |i|
+  rows << next_row(rows[i])
+end
+
+puts rows.join.count(".")
