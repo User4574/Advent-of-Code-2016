@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+input = File.read("input").chomp.to_i
+
+elves = []
+
+input.times do |i|
+  elves << [i+1, 1]
+end
+
+while elves.length > 1 do
+  elves.each_with_index do |e, i|
+    if e[1] == 0 then
+      next
+    else
+      e[1] += elves[(i+1) % elves.length][1]
+      elves[(i+1) % elves.length][1] = 0
+    end
+  end
+  elves = elves.reject{|e| e[1].zero? }
+end
+
+puts elves[0][0]

@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+input = File.readlines("input").map(&:chomp)[2..-1]
+
+nodes = {}
+
+input.each do |line|
+  line =~ /\/dev\/grid\/node-x(\d+)-y(\d+) +(\d+)T +(\d+)T +(\d+)T +(\d+)%/
+  nodes[[$1.to_i, $2.to_i]] = {
+    size: $3.to_i,
+    used: $4.to_i,
+    avail: $5.to_i,
+    usepc: ($6.to_i)/100.0
+  }
+end
+
+viable = 0
+
+nodes.each do |nodea, dataa|
+  nodes.each do |nodeb, datab|
+    if nodea != nodeb &&
+       dataa[:used] > 0 &&
+       datab[:avail] >= dataa[:used] then
+      viable += 1
+    end
+  end
+end
+
+puts viable

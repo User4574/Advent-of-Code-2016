@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+class String
+  def to_range
+    self.split("-").map(&:to_i)
+  end
+end
+
+blacklist = File.readlines("input").map(&:chomp).map(&:to_range)
+
+blacklist.sort_by!(&:first)
+
+(0...blacklist.length).each do |i|
+  if blacklist[i].last == blacklist[i+1].first ||
+    blacklist[i].last + 1 == blacklist[i+1].first then
+    next
+  else
+    puts blacklist[i].last + 1
+    break
+  end
+end

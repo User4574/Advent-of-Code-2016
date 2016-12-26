@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+input = File.read("input").chomp.to_i
+
+elves = (1..input).to_a
+p = 0
+
+while (l = elves.length) > 1 do
+  e = l
+  e /= 2
+  e += p
+  e %= l
+  elves.delete_at(e)
+
+  p += 1
+  p = 0 if p >= (l - 1)
+end
+
+puts elves[0]
